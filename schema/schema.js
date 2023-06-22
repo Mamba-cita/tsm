@@ -8,7 +8,6 @@ const Destination = require("../server/models/DestinationDepot");
 const Origin = require("../server/models/OrignDepot");
 const Package = require("../server/models/Package");
 
-
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -17,6 +16,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLDateTime,
+  GraphQLEnumType,
 } = require("graphql");
 
 // Client Type
@@ -45,7 +45,7 @@ const TransporterType = new GraphQLObjectType({
     email: { type: GraphQLString },
     account_no: { type: GraphQLString },
     git: { type: GraphQLString },
-    git_expiry: { type: GraphQLDateTime },
+    git_expiry: { type: GraphQLString },
     director: { type: GraphQLString },
     contact: { type: GraphQLString },
     country: { type: GraphQLString },
@@ -94,47 +94,47 @@ const TrailerType = new GraphQLObjectType({
 /// comodity
 
 const ComodityType = new GraphQLObjectType({
-    name: "Comodity",
-    fields: () => ({
-      id: { type: GraphQLID },
-      name: { type: GraphQLString },
-    }),
-  });
-  
-  /// Origin type
+  name: "Comodity",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+
+/// Origin type
 
 const OriginDepotType = new GraphQLObjectType({
-    name: "Origin",
-    fields: () => ({
-      id: { type: GraphQLID },
-      name: { type: GraphQLString },
-    }),
-  });
- /// Destinatin type
-  const DestinationDepotType = new GraphQLObjectType({
-    name: "Destination",
-    fields: () => ({
-      id: { type: GraphQLID },
-      name: { type: GraphQLString },
-    }),
-  });
-  
-  /// packaging type
+  name: "Origin",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+/// Destinatin type
+const DestinationDepotType = new GraphQLObjectType({
+  name: "Destination",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+
+/// packaging type
 
 const PackageType = new GraphQLObjectType({
-    name: "Package",
-    fields: () => ({
-      id: { type: GraphQLID },
-      name: { type: GraphQLString },
-    }),
-  });
+  name: "Package",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
 
 // Shipments
 
 const ShipmentType = new GraphQLObjectType({
   name: "Shipment",
   fields: () => ({
-    shipment_id: { type: GraphQLID },
+    id: { type: GraphQLID },
     cargo_type: { type: GraphQLString },
     consignee: { type: GraphQLString },
     loading_date: { type: GraphQLString },
@@ -148,13 +148,13 @@ const ShipmentType = new GraphQLObjectType({
     packaging_type: { type: GraphQLString },
     total_tons: { type: GraphQLString },
     cargo_rate: { type: GraphQLString },
-    cargo_type: { type: GraphQLString },
+    cargo_rate_type: { type: GraphQLString },
     payment_period: { type: GraphQLString },
     status: { type: GraphQLString },
     client: {
       type: ClientType,
       resolve(parent, args) {
-        return Client.findByID(parent.clientId);
+        return Client.findById(parent.clientId);
       },
     },
   }),
@@ -247,69 +247,68 @@ const RootQuery = new GraphQLObjectType({
     //Comodity
 
     comodities: {
-        type: GraphQLList(ComodityType),
-        resolve(parent, args) {
-          return Comodity.find();
-        },
+      type: GraphQLList(ComodityType),
+      resolve(parent, args) {
+        return Comodity.find();
       },
-      comodity: {
-        type: ComodityType,
-        args: { id: { type: GraphQLID } },
-        resolve(parent, args) {
-          return Comodity.findById(args.id);
-        },
+    },
+    comodity: {
+      type: ComodityType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Comodity.findById(args.id);
       },
+    },
 
-        //Packaging type
+    //Packaging type
 
     packaging: {
-        type: GraphQLList(PackageType),
-        resolve(parent, args) {
-          return Package.find();
-        },
+      type: GraphQLList(PackageType),
+      resolve(parent, args) {
+        return Package.find();
       },
-      packaging_types: {
-        type: PackageType,
-        args: { id: { type: GraphQLID } },
-        resolve(parent, args) {
-          return Package.findById(args.id);
-        },
+    },
+    packaging_types: {
+      type: PackageType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Package.findById(args.id);
       },
+    },
 
-       //Origin
+    //Origin
 
     origin_depot: {
-        type: GraphQLList(OriginDepotType),
-        resolve(parent, args) {
-          return Origin.find();
-        },
+      type: GraphQLList(OriginDepotType),
+      resolve(parent, args) {
+        return Origin.find();
       },
-      origin_depots: {
-        type: OriginDepotType,
-        args: { id: { type: GraphQLID } },
-        resolve(parent, args) {
-          return Origin.findById(args.id);
-        },
+    },
+    origin_depots: {
+      type: OriginDepotType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Origin.findById(args.id);
       },
+    },
 
-        //Destination
+    //Destination
 
     destination_depot: {
-        type: GraphQLList(DestinationDepotType),
-        resolve(parent, args) {
-          return Destination.find();
-        },
+      type: GraphQLList(DestinationDepotType),
+      resolve(parent, args) {
+        return Destination.find();
       },
-      destination_depots: {
-        type: DestinationDepotType,
-        args: { id: { type: GraphQLID } },
-        resolve(parent, args) {
-          return Destination.findById(args.id);
-        },
+    },
+    destination_depots: {
+      type: DestinationDepotType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Destination.findById(args.id);
       },
+    },
   },
 });
-
 
 //Mutations
 
@@ -347,105 +346,103 @@ const mutation = new GraphQLObjectType({
 
     //add comodity
     addComodity: {
-        type: ComodityType,
-        args: {
-          name: { type: GraphQLNonNull(GraphQLString) },
-        },
-        resolve(parent, args) {
-          const comodity = new Comodity({
-            name: args.name,
-          });
-          return comodity.save();
-        },
+      type: ComodityType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
       },
-  
-      //delete comodity
-      deleteComodity: {
-        type: ComodityType,
-        args: {
-          id: { type: GraphQLNonNull(GraphQLID) },
-        },
-        resolve(parent, args) {
-          return Comodity.findByIdAndRemove(args.id);
-        },
+      resolve(parent, args) {
+        const comodity = new Comodity({
+          name: args.name,
+        });
+        return comodity.save();
       },
+    },
 
-       //add origin
+    //delete comodity
+    deleteComodity: {
+      type: ComodityType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Comodity.findByIdAndRemove(args.id);
+      },
+    },
+
+    //add origin
     addOrigin: {
-        type: OriginDepotType,
-        args: {
-          name: { type: GraphQLNonNull(GraphQLString) },
-        },
-        resolve(parent, args) {
-          const origin = new Origin({
-            name: args.name,
-          });
-          return origin.save();
-        },
+      type: OriginDepotType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
       },
-  
-      //delete origin
-      deleteOrigin: {
-        type: OriginDepotType,
-        args: {
-          id: { type: GraphQLNonNull(GraphQLID) },
-        },
-        resolve(parent, args) {
-          return Origin.findByIdAndRemove(args.id);
-        },
+      resolve(parent, args) {
+        const origin = new Origin({
+          name: args.name,
+        });
+        return origin.save();
       },
+    },
 
-        //add destination
+    //delete origin
+    deleteOrigin: {
+      type: OriginDepotType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Origin.findByIdAndRemove(args.id);
+      },
+    },
+
+    //add destination
     addOrigin: {
-        type: OriginDepotType,
-        args: {
-          name: { type: GraphQLNonNull(GraphQLString) },
-        },
-        resolve(parent, args) {
-          const destination = new Destination({
-            name: args.name,
-          });
-          return destination.save();
-        },
+      type: OriginDepotType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
       },
-  
-      //delete destination
-      deleteDestination: {
-        type: DestinationDepotType,
-        args: {
-          id: { type: GraphQLNonNull(GraphQLID) },
-        },
-        resolve(parent, args) {
-          return Destination.findByIdAndRemove(args.id);
-        },
+      resolve(parent, args) {
+        const destination = new Destination({
+          name: args.name,
+        });
+        return destination.save();
       },
+    },
 
+    //delete destination
+    deleteDestination: {
+      type: DestinationDepotType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Destination.findByIdAndRemove(args.id);
+      },
+    },
 
-       //add packaging type
+    //add packaging type
     addPackaging: {
-        type: PackageType,
-        args: {
-          name: { type: GraphQLNonNull(GraphQLString) },
-        },
-        resolve(parent, args) {
-          const packaging = new Package({
-            name: args.name,
-          });
-          return packaging.save();
-        },
+      type: PackageType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
       },
-  
-      //delete packaging type
-      deletePackaging: {
-        type: PackageType,
-        args: {
-          id: { type: GraphQLNonNull(GraphQLID) },
-        },
-        resolve(parent, args) {
-          return Package.findByIdAndRemove(args.id);
-        },
+      resolve(parent, args) {
+        const packaging = new Package({
+          name: args.name,
+        });
+        return packaging.save();
       },
+    },
 
+    //delete packaging type
+    deletePackaging: {
+      type: PackageType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Package.findByIdAndRemove(args.id);
+      },
+    },
 
     //add truck
     addTruck: {
@@ -486,15 +483,13 @@ const mutation = new GraphQLObjectType({
         year: { type: GraphQLNonNull(GraphQLString) },
         trailer_type: { type: GraphQLNonNull(GraphQLString) },
         trailer_capacity: { type: GraphQLNonNull(GraphQLString) },
-
       },
       resolve(parent, args) {
         const trailer = new Trailer({
-            trailer_no: args.trailer_no,
-            year: args.year,
-            trailer_type: args.trailer_type,
-            trailer_capacity: args.trailer_capacity,
-
+          trailer_no: args.trailer_no,
+          year: args.year,
+          trailer_type: args.trailer_type,
+          trailer_capacity: args.trailer_capacity,
         });
         return trailer.save();
       },
@@ -554,35 +549,105 @@ const mutation = new GraphQLObjectType({
         return Transporter.findByIdAndRemove(args.id);
       },
     },
+    //update transporter
+    deleteTransporter: {
+      type: TransporterType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        account_no: { type: GraphQLString },
+        git: { type: GraphQLString },
+        git_expiry: { type: GraphQLString },
+        director: { type: GraphQLString },
+        contact: { type: GraphQLString },
+        country: { type: GraphQLString },
+        city: { type: GraphQLString },
+        address: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Transporter.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
+              email: args.email,
+              account_no: args.account_no,
+              git: args.git,
+              git_expiry: args.git_expiry,
+              director: args.director,
+              contact: args.contact,
+              country: args.country,
+              city: args.city,
+              address: args.address,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      },
+    },
 
     // add shipment
 
     addShipment: {
       type: ShipmentType,
       args: {
-        name: { type: GraphQLNonNull(GraphQLString) },
-        email: { type: GraphQLNonNull(GraphQLString) },
-        account_no: { type: GraphQLNonNull(GraphQLString) },
-        git: { type: GraphQLNonNull(GraphQLString) },
-        git_expiry: { type: GraphQLNonNull(GraphQLString) },
-        director: { type: GraphQLNonNull(GraphQLString) },
-        contact: { type: GraphQLNonNull(GraphQLString) },
-        country: { type: GraphQLNonNull(GraphQLString) },
-        city: { type: GraphQLNonNull(GraphQLString) },
-        address: { type: GraphQLNonNull(GraphQLString) },
+        cargo_type: { type: GraphQLNonNull(GraphQLString) },
+        consignee: { type: GraphQLNonNull(GraphQLString) },
+        loading_date: { type: GraphQLNonNull(GraphQLString) },
+        last_loading_date: { type: GraphQLNonNull(GraphQLString) },
+        clearing_agent: { type: GraphQLNonNull(GraphQLString) },
+        origin_depot: { type: GraphQLNonNull(GraphQLString) },
+        destination_depot: { type: GraphQLNonNull(GraphQLString) },
+        loading_contact: { type: GraphQLNonNull(GraphQLString) },
+        offloading_contact: { type: GraphQLNonNull(GraphQLString) },
+        total_tons: { type: GraphQLNonNull(GraphQLString) },
+        commodity: { type: GraphQLNonNull(GraphQLString) },
+        packaging_type: { type: GraphQLNonNull(GraphQLString) },
+        cargo_rate_type: { type: GraphQLNonNull(GraphQLString) },
+        cargo_rate: { type: GraphQLNonNull(GraphQLString) },
+        payment_period: { type: GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectStatus",
+            values: {
+              new: { value: "Inbound" },
+              outside: { value: "Outside Loading Point" },
+              inside: { value: "Inside Loading Point" },
+              awaiting_docs: { value: "Loaded Awaiting Docs" },
+              onjourney: { value: "On_Journey" },
+              offloading: { value: "Offloading" },
+              empty_return: { value: "Offloaded On Empty Return" },
+              complete: { value: "Completed" },
+              invoice: { value: "Invoiced" },
+              paid: { value: "Paid" },
+            },
+          }),
+          defaultValue: "Inbound",
+        },
+        clientId: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
         const shipment = new Shipment({
-          name: args.name,
-          email: args.email,
-          account_no: args.account_no,
-          git: args.git,
-          git_expiry: args.git_expiry,
-          director: args.director,
-          contact: args.contact,
-          country: args.country,
-          city: args.city,
-          address: args.address,
+          cargo_type: args.cargo_type,
+          consignee: args.consignee,
+          loading_date: args.loading_date,
+          last_loading_date: args.last_loading_date,
+          clearing_agent: args.clearing_agent,
+          origin_depot: args.origin_depot,
+          destination_depot: args.destination_depot,
+          loading_contact: args.loading_contact,
+          offloading_contact: args.offloading_contact,
+          total_tons: args.total_tons,
+          commodity: args.commodity,
+          packaging_type: args.packaging_type,
+          cargo_rate_type: args.cargo_rate_type,
+          payment_period: args.payment_period,
+          cargo_rate: args.cargo_rate,
+          clientId: args.clientId,
+          status: args.status,
         });
         return shipment.save();
       },
@@ -597,6 +662,76 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parent, args) {
         return Shipment.findByIdAndRemove(args.id);
+      },
+    },
+
+    //update shipment
+
+    updateShipment: {
+      type: ShipmentType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        cargo_type: { type: GraphQLString },
+        consignee: { type: GraphQLString },
+        loading_date: { type: GraphQLString },
+        last_loading_date: { type: GraphQLString },
+        clearing_agent: { type: GraphQLString },
+        origin_depot: { type: GraphQLString },
+        destination_depot: { type: GraphQLString },
+        loading_contact: { type: GraphQLString },
+        offloading_contact: { type: GraphQLString },
+        total_tons: { type: GraphQLString },
+        commodity: { type: GraphQLString },
+        packaging_type: { type: GraphQLString },
+        cargo_rate_type: { type: GraphQLString },
+        cargo_rate: { type: GraphQLString },
+        payment_period: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectUpdatedStatus",
+            values: {
+              new: { value: "Inbound" },
+              outside: { value: "Outside Loading Point" },
+              inside: { value: "Inside Loading Point" },
+              awaiting_docs: { value: "Loaded Awaiting Docs" },
+              onjourney: { value: "On_Journey" },
+              offloading: { value: "Offloading" },
+              empty_return: { value: "Offloaded On Empty Return" },
+              complete: { value: "Completed" },
+              invoice: { value: "Invoiced" },
+              paid: { value: "Paid" },
+            },
+          }),
+        },
+      },
+      resolve(parent, args) {
+        return Shipment.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              cargo_type: args.cargo_type,
+              consignee: args.consignee,
+              loading_date: args.loading_date,
+              last_loading_date: args.last_loading_date,
+              clearing_agent: args.clearing_agent,
+              origin_depot: args.origin_depot,
+              destination_depot: args.destination_depot,
+              loading_contact: args.loading_contact,
+              offloading_contact: args.offloading_contact,
+              total_tons: args.total_tons,
+              commodity: args.commodity,
+              packaging_type: args.packaging_type,
+              cargo_rate_type: args.cargo_rate_type,
+              payment_period: args.payment_period,
+              cargo_rate: args.cargo_rate,
+              clientId: args.clientId,
+              status: args.status,
+            },
+          },
+          {
+            new: true,
+          }
+        );
       },
     },
   },

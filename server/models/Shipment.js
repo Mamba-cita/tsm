@@ -40,7 +40,7 @@ const ShipmentSchema = new mongoose.Schema({
     cargo_rate: {
         type: String,
     },
-    cargo_type: {
+    cargo_rate_type: {
         type: String,
     },
     payment_period: {
