@@ -1,12 +1,12 @@
-const Shipment = require("../server/models/Shipment");
-const Client = require("../server/models/Client");
-const Transporter = require("../server/models/Transporter");
-const Truck = require("../server/models/Truck");
-const Trailer = require("../server/models/Trailer");
-const Comodity = require("../server/models/Comodity");
-const Destination = require("../server/models/DestinationDepot");
-const Origin = require("../server/models/OrignDepot");
-const Package = require("../server/models/Package");
+const Shipment = require("../models/Shipment");
+const Client = require("../models/Client");
+const Transporter = require("../models/Transporter");
+const Truck = require("../models/Truck");
+const Trailer = require("../models/Trailer");
+const Comodity = require("../models/Comodity");
+const Destination = require("../models/DestinationDepot");
+const Origin = require("../models/OrignDepot");
+const Package = require("../models/Package");
 
 const {
   GraphQLObjectType,
