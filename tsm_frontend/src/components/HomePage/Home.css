@@ -1,0 +1,21 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+@media screen and (max-width: 1200px) {
+    .home{
+     /* background-color: #fca61f;  */
+    justify-content: flex-start;
+    margin-top: 2rem;
+    }
+        
+  
+        
+  }
+  @media screen and (max-width: 860px) {
+    .home{
+   align-items: center;
+    }
+        
+  }
