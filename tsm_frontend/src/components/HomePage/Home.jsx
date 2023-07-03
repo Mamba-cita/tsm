@@ -1,22 +1,21 @@
+import { Space, Typography } from "antd";
 import React from "react";
 import "../../App.css";
-import RightSidebar from "../Sidebar/RightSidebar/RightSidebar";
-import Sidebar from "../Sidebar/LeftSidebar/Sidebar";
-
 import "./Home.css";
-import Header from "../Header";
+import HomeCard from "./Card/HomeCard";
+import Orders from "../Orders/Orders";
 
 export default function Home() {
   return (
-    <div className="home">
-      <div className="Main">
-        <div className="MainGlass">
-          <Header/>
-          <h1>Home</h1>
-          <Sidebar />
-          <RightSidebar />
-        </div>
-      </div>
+    <div className="">
+      <Typography.Title level={4}> Home</Typography.Title>
+
+      <Space direction="horizontal">
+        <HomeCard/>
+      </Space>
+      <Space >
+        <Orders/>
+      </Space>
     </div>
   );
 }

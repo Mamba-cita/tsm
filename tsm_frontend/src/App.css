@@ -11,7 +11,41 @@
     --activeItem: #f799a354;
   }
 
+.MainApp{
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
 
+}
+
+.TsmHeader{
+height: 50px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 4px 20px 4px 12px;
+border-top: 1px solid rgba(0, 0, 0, 0.15) ;
+}
+.TsmFooter{
+height: 50px;
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+border-top: 1px solid rgba(0, 0, 0, 0.15) ;
+}
+.TsmSideMenu{
+
+}
+.TsmPagecontent{
+  padding-left: 16px;
+}
+.SideMenuPageContent{
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
   .Main {
     background: linear-gradient(
       106.37deg,

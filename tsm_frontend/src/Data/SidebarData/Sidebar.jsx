@@ -1,5 +1,4 @@
-import {UilEstate, UilClipboardAlt, UilChart, } from '@iconscout/react-unicons'
-import Moves from '../../components/Moves/Moves';
+import {UilEstate, UilChart, } from '@iconscout/react-unicons'
 
 
 export const SidebarData =[

@@ -1,6 +1,10 @@
 import React from 'react'
+import "../../App.css"
 import Sidebar from '../Sidebar/LeftSidebar/Sidebar'
-import RightSidebar from '../Sidebar/RightSidebar/RightSidebar'
+// import RightSidebar from '../Sidebar/RightSidebar/RightSidebar'
+import Transporter from './Entity/Transporters/Transporter'
+import Transporters from './Entity/Transporters/Transporters'
+
 
 
 export default function Registry() {
@@ -11,7 +15,8 @@ export default function Registry() {
         <div className="MainGlass">
           <h1>Registry</h1>
           <Sidebar />
-          <RightSidebar />
+          <Transporter/>
+          <Transporters/>
         </div>
       </div>
     </div>

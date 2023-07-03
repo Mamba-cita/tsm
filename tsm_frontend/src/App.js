@@ -1,35 +1,25 @@
-import Header from "./components/Header";
+import { ApolloProvider } from "@apollo/client";
+import { Space } from "antd";
+import tsm from "./Url";
 import "./App.css";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-import Home from "./components/HomePage/Home";
-import Registry from "./components/Registry/Registry";
-import Finance from "./components/FinancePayment/Finance";
-import Shipments from "./components/Shipments/Shipments"
-import Moves from "./components/Moves/Moves"
-import Analytics from "./components/Analytics/Analytics"
-import Error from "./components/PageNotFound/Error"
-import { Route, Routes } from "react-router-dom";
-
-
-const client = new ApolloClient({
-  uri: "http://localhost:5000/tsm",
-  cache: new InMemoryCache(),
-});
+import Header from "./components/Header";
+import PageContent from "./components/PageContent/PageContent";
+import Footer from "./components/Footer/Footer";
+import Sidebar from "./components/Sidebar/LeftSidebar/Sidebar";
 
 function App() {
   return (
     <>
-      <ApolloProvider client={client}>
-            <Routes>
-              <Route path="/" element={ <Home /> }></Route>
-              <Route path="/Shipments" element={ <Shipments /> }></Route>
-              <Route path="/Moves" element={ <Moves /> }></Route>
-              <Route path="/Registry" element={ <Registry /> }></Route>
-              <Route path="/Finance" element={ <Finance /> }></Route>
-              <Route path="/Analytics" element={ <Analytics /> }></Route>
-              <Route path="*" element={ <Error /> }></Route>
-              </Routes>
-      </ApolloProvider>
+      <div className="MainApp">
+        <ApolloProvider client={tsm}>
+          <Header />
+          <Space className="SideMenuPageContent">
+            <Sidebar/>
+           <PageContent/>
+          </Space>
+          <Footer/>
+        </ApolloProvider>
+      </div>
     </>
   );
 }

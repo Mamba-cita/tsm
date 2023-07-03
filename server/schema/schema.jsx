@@ -19,6 +19,89 @@ const {
   GraphQLEnumType,
 } = require("graphql");
 
+// Moves
+const ChildOrderType = new GraphQLObjectType({
+  name: 'ChildOrder',
+  fields: () => ({
+    id: { type: GraphQLID },
+    truck_reg: { type: GraphQLString },
+    trailer: { type: GraphQLString },
+    driver: { type: GraphQLString },
+    transporter: { type: GraphQLString },
+    make: { type: GraphQLString },
+    arrival_loading: { type: GraphQLString },
+    gateinl1: { type: GraphQLString },
+    gateoutl1: { type: GraphQLString },
+    cargo_type: { type: GraphQLString },
+    trans_rate_type: { type: GraphQLString },
+    cargo_rate_type: { type: GraphQLString },
+    cargo_rate: { type: GraphQLString },
+    trans_rate: { type: GraphQLString },
+    arrivalb1: { type: GraphQLString },
+    arrivalb2: { type: GraphQLString },
+    arrivald1: { type: GraphQLString },
+    gateind1: { type: GraphQLString },
+    qt_to_load: { type: GraphQLString },
+    qt_loaded1: { type: GraphQLString },
+    qt_loaded2: { type: GraphQLString },
+    offl_qt1: { type: GraphQLString },
+    offl_qt2: { type: GraphQLString },
+    client_del: { type: GraphQLString },
+    tsm_del: { type: GraphQLString },
+    client_de2: { type: GraphQLString },
+    tsm_de2: { type: GraphQLString },
+    cont_no_1: { type: GraphQLString },
+    cont_no_2: { type: GraphQLString },
+    no_of_bags: { type: GraphQLString },
+    bag_size: { type: GraphQLString },
+    no_of_bags: { type: GraphQLString },
+    bag_size: { type: GraphQLString },
+    gateoutd1: { type: GraphQLString },
+    arrival_emptyd: { type: GraphQLString },
+    depurture_emptyd: { type: GraphQLString },
+    cargo_inv: { type: GraphQLString },
+    cargo_inv_date: { type: GraphQLString },
+    cargo_inv_status: { type: GraphQLString },
+    trans_inv: { type: GraphQLString },
+    trans_inv_date: { type: GraphQLString },
+    trans_inv_status: { type: GraphQLString },
+  }),
+});
+
+// Order Type
+// const OrderType = new GraphQLObjectType({
+//   name: "Order",
+//   fields: () => ({
+//     id: { type: GraphQLID },
+//     cargo_type: { type: GraphQLString },
+//     consignee: { type: GraphQLString },
+//     loading_date: { type: GraphQLString },
+//     last_loading_date: { type: GraphQLString },
+//     clearing_agent: { type: GraphQLString },
+//     origin_depot: { type: GraphQLString },
+//     destination_depot: { type: GraphQLString },
+//     loading_contact: { type: GraphQLString },
+//     offloading_contact: { type: GraphQLString },
+//     commodity: { type: GraphQLString },
+//     packaging_type: { type: GraphQLString },
+//     total_tons: { type: GraphQLString },
+//     cargo_rate: { type: GraphQLString },
+//     cargo_rate_type: { type: GraphQLString },
+//     payment_period: { type: GraphQLString },
+//     children: {
+//       type: GraphQLList(ChildOrderType),
+//       resolve(parent, args) {
+//         // Fetch and return the child orders for the parent order
+//         return ChildOrder.find({ _id: { $in: parent.children } });
+//       },
+//     },
+//   }),
+  
+// });
+
+
+
+
 // Client Type
 
 const ClientType = new GraphQLObjectType({
@@ -165,6 +248,24 @@ const ShipmentType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
+
+//Orders
+
+order: {
+  type: OrderType,
+  args: { id: { type: GraphQLID } },
+  resolve(parent, args) {
+    return Order.findById(args.id);
+  },
+},
+
+orders: {
+  type:  GraphQLList(OrderType),
+  resolve(parent, args) {
+    return Order.find();
+  },
+},
+
     // Shipments
     shipments: {
       type: GraphQLList(ShipmentType),
@@ -588,6 +689,14 @@ const mutation = new GraphQLObjectType({
         );
       },
     },
+//create order
+
+
+
+
+
+
+
 
     // add shipment
 
@@ -667,73 +776,73 @@ const mutation = new GraphQLObjectType({
 
     //update shipment
 
-    updateShipment: {
-      type: ShipmentType,
-      args: {
-        id: { type: GraphQLNonNull(GraphQLID) },
-        cargo_type: { type: GraphQLString },
-        consignee: { type: GraphQLString },
-        loading_date: { type: GraphQLString },
-        last_loading_date: { type: GraphQLString },
-        clearing_agent: { type: GraphQLString },
-        origin_depot: { type: GraphQLString },
-        destination_depot: { type: GraphQLString },
-        loading_contact: { type: GraphQLString },
-        offloading_contact: { type: GraphQLString },
-        total_tons: { type: GraphQLString },
-        commodity: { type: GraphQLString },
-        packaging_type: { type: GraphQLString },
-        cargo_rate_type: { type: GraphQLString },
-        cargo_rate: { type: GraphQLString },
-        payment_period: { type: GraphQLString },
-        status: {
-          type: new GraphQLEnumType({
-            name: "ProjectUpdatedStatus",
-            values: {
-              new: { value: "Inbound" },
-              outside: { value: "Outside Loading Point" },
-              inside: { value: "Inside Loading Point" },
-              awaiting_docs: { value: "Loaded Awaiting Docs" },
-              onjourney: { value: "On_Journey" },
-              offloading: { value: "Offloading" },
-              empty_return: { value: "Offloaded On Empty Return" },
-              complete: { value: "Completed" },
-              invoice: { value: "Invoiced" },
-              paid: { value: "Paid" },
-            },
-          }),
-        },
-      },
-      resolve(parent, args) {
-        return Shipment.findByIdAndUpdate(
-          args.id,
-          {
-            $set: {
-              cargo_type: args.cargo_type,
-              consignee: args.consignee,
-              loading_date: args.loading_date,
-              last_loading_date: args.last_loading_date,
-              clearing_agent: args.clearing_agent,
-              origin_depot: args.origin_depot,
-              destination_depot: args.destination_depot,
-              loading_contact: args.loading_contact,
-              offloading_contact: args.offloading_contact,
-              total_tons: args.total_tons,
-              commodity: args.commodity,
-              packaging_type: args.packaging_type,
-              cargo_rate_type: args.cargo_rate_type,
-              payment_period: args.payment_period,
-              cargo_rate: args.cargo_rate,
-              clientId: args.clientId,
-              status: args.status,
-            },
-          },
-          {
-            new: true,
-          }
-        );
-      },
-    },
+    // updateShipment: {
+    //   type: ShipmentType,
+    //   args: {
+    //     id: { type: GraphQLNonNull(GraphQLID) },
+    //     cargo_type: { type: GraphQLString },
+    //     consignee: { type: GraphQLString },
+    //     loading_date: { type: GraphQLString },
+    //     last_loading_date: { type: GraphQLString },
+    //     clearing_agent: { type: GraphQLString },
+    //     origin_depot: { type: GraphQLString },
+    //     destination_depot: { type: GraphQLString },
+    //     loading_contact: { type: GraphQLString },
+    //     offloading_contact: { type: GraphQLString },
+    //     total_tons: { type: GraphQLString },
+    //     commodity: { type: GraphQLString },
+    //     packaging_type: { type: GraphQLString },
+    //     cargo_rate_type: { type: GraphQLString },
+    //     cargo_rate: { type: GraphQLString },
+    //     payment_period: { type: GraphQLString },
+    //     status: {
+    //       type: new GraphQLEnumType({
+    //         name: "ProjectUpdatedStatus",
+    //         values: {
+    //           new: { value: "Inbound" },
+    //           outside: { value: "Outside Loading Point" },
+    //           inside: { value: "Inside Loading Point" },
+    //           awaiting_docs: { value: "Loaded Awaiting Docs" },
+    //           onjourney: { value: "On_Journey" },
+    //           offloading: { value: "Offloading" },
+    //           empty_return: { value: "Offloaded On Empty Return" },
+    //           complete: { value: "Completed" },
+    //           invoice: { value: "Invoiced" },
+    //           paid: { value: "Paid" },
+    //         },
+    //       }),
+    //     },
+    //   },
+    //   resolve(parent, args) {
+    //     return Shipment.findByIdAndUpdate(
+    //       args.id,
+    //       {
+    //         $set: {
+    //           cargo_type: args.cargo_type,
+    //           consignee: args.consignee,
+    //           loading_date: args.loading_date,
+    //           last_loading_date: args.last_loading_date,
+    //           clearing_agent: args.clearing_agent,
+    //           origin_depot: args.origin_depot,
+    //           destination_depot: args.destination_depot,
+    //           loading_contact: args.loading_contact,
+    //           offloading_contact: args.offloading_contact,
+    //           total_tons: args.total_tons,
+    //           commodity: args.commodity,
+    //           packaging_type: args.packaging_type,
+    //           cargo_rate_type: args.cargo_rate_type,
+    //           payment_period: args.payment_period,
+    //           cargo_rate: args.cargo_rate,
+    //           clientId: args.clientId,
+    //           status: args.status,
+    //         },
+    //       },
+    //       {
+    //         new: true,
+    //       }
+    //     );
+    //   },
+    // },
   },
 });
 
